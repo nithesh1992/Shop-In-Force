@@ -1,0 +1,56 @@
+<apex:component >
+    <apex:attribute name="Product" description="This is the Product Item in Card View" type="PricebookEntry" required="true"/>
+    
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <title></title>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            
+            <!-- Import the Design System style sheet -->
+            <apex:slds />
+            <apex:includeScript value="{!URLFOR($Resource.JSforce)}" />
+            <script>
+                var conn = new jsforce.Connection({ accessToken: '{!$API.Session_Id}' });
+                conn.query('SELECT Id, Name FROM Account', function(err, res) {
+                  if (err) { return handleError(err); }
+                  handleResult(res);
+                  console.log(res);
+              });
+
+
+            </script>
+
+        </head>
+        <body>
+            <div class="slds-scope">
+                <ul class="slds-has-dividers--around-space slds-m-around--small">
+                    <li class="slds-item">
+                        <div class="slds-tile slds-tile--board">
+                            <div class="slds-media slds-media--responsive">
+                                <div class="slds-media__figure">
+                                    <img src="{!URLFOR($Asset.SLDS, 'assets/images/avatar2.jpg')}" class="slds-avatar--large" alt="Placeholder" />
+                                </div>
+                                <div class="slds-media__body">
+                                    <apex:outputText styleClass="slds-text-heading--small"  value="{!Product.Name}"/> <br/>
+                                    <apex:outputField styleClass="slds-text-body--small"  value="{!Product.UnitPrice}"/> 
+                                    <div class="slds-align--absolute-center">
+                                        <input type="number" id="name" class="slds-input slds-size--1-of-8 slds-m-left--large"  placeholder="Quantity"/>
+                                    </div>
+                                    
+                                    <div class="slds-float--right">
+                                        <button class="slds-button slds-button--brand"> Add to Cart </button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>                        
+                    </li>
+                </ul>
+                
+            </div>
+        </body>
+    </html>
+</apex:component>

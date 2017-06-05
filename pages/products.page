@@ -1,0 +1,100 @@
+<apex:page controller="ProductController" standardStylesheets="false" sidebar="false" applyHtmlTag="true" applyBodyTag="true" showHeader="false" >
+    <apex:slds id="slds"/>
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <title>Add Products to Cart</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            
+            <!-- Import the Design System style sheet -->
+            <apex:slds />
+            <script type="text/javascript">
+
+                Visualforce.remoting.timeout = 120000; // Set timeout at page level
+
+                function getSearchResults() {
+                    var searchkeyword = document.getElementById('searchbar').value;
+
+                    // This remoting call will use the page's timeout value
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.ProductController.refresh}',
+                        accountName, 
+                        handleResult
+                        );
+                }
+
+                function handleResult(result, event) { ... }
+            </script>
+        </head>
+        <body>
+            <div class="slds-scope"> 
+                <header class="slds-global-header_container"><a href="javascript:void(0);" class="slds-assistive-text slds-assistive-text--focus">Skip to Navigation</a><a href="javascript:void(0);" class="slds-assistive-text slds-assistive-text--focus">Skip to Main Content</a>
+                    <div class="slds-global-header slds-grid slds-grid--align-spread">
+                        <div class="slds-global-header__item">
+                            <div class="slds-global-header__logo">
+                                <img src="" alt="" />
+                            </div>
+                        </div>
+                        <div class="slds-global-header__item slds-global-header__item--search">
+                            <div class="slds-form-element slds-lookup">
+                                <label class="slds-assistive-text" for="global-search-01">Search Products</label>
+                                <div class="slds-form-element__control lookup__search-control slds-input-has-icon slds-input-has-icon--left">
+                                    <svg class="slds-input__icon" aria-hidden="true">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#search')}"></use>
+                                    </svg>
+                                    <input type="search" id="searchbar" class="slds-input slds-lookup__search-input" placeholder="Search Products" />
+                                 
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="slds-global-header__item slds-grid slds-grid--vertical-align-center">                            
+                            
+                            <li class="slds-dropdown-trigger slds-dropdown-trigger_click">
+                                <div class="slds-m-left_medium slds-float_right">
+                                    <apex:outputText id="cart-count" value="0"> </apex:outputText>
+                                </div>
+                                
+                            </li>
+                            <li class="slds-dropdown-trigger slds-dropdown-trigger--click">
+                                <button class="slds-button slds-button--icon slds-button--icon-container slds-button--icon-small slds-global-header__button--icon" aria-haspopup="true" title="Cart">
+                                    <span class="slds-icon_container slds-icon-custom-custom93" title="description of icon when needed">
+                                        <svg aria-hidden="true" class="slds-icon">
+                                            <use xlink:href="{!URLFOR($Asset.SLDS, 
+                                                             'assets/icons/custom-sprite/svg/symbols.svg#custom93')}">                                                                
+                                                             </use>                                        
+                                        </svg>                                        
+                                    </span>
+                                </button>                                
+                            </li>                           
+                        </ul>
+                    </div>
+                </header>
+                
+                <div class="slds-page-header slds-m-top--xx-large">
+                    <div class="slds-media">
+                        <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="">Add Products to Cart</h1>
+                            <p class="slds-text-body_small slds-line-height_reset"> Pricebook: Salesforce Products </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-m-top--xx-small">                    
+                    <apex:repeat id="tabledata" value="{!Products}" var="Product">
+                        <c:ListItem id="item" Product="{!Product}"/>
+                    </apex:repeat>
+                    
+                </div>
+                <div class="slds-align--absolute-center slds-m-top--xx-small slds-m-bottom--medium">
+                    <div class="slds-button-group " role="group">
+                    <apex:form>
+                      <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!previous}" value="Previous" id="previous" rendered="{!hasPrevious}"/>
+                      <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!next}" value="Next" id="Next" rendered="{!hasNext}" />
+                    </apex:form>
+                    </div>
+                </div>
+                
+            </div>  
+        </body>
+    </html>
+</apex:page>
