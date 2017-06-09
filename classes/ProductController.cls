@@ -3,7 +3,7 @@ public class ProductController {
         get {
             if(Con == null) {
                 Con = new ApexPages.StandardSetController(Database.getQueryLocator(
-                    [SELECT Id, Name, UnitPrice FROM PricebookEntry Where IsActive = true]));
+                    [SELECT Id, Name, UnitPrice FROM PricebookEntry Where IsActive = true AND Pricebook2.Name = 'nShop']));
                 Con.setPageSize(5);
             }
             return Con;
@@ -13,6 +13,7 @@ public class ProductController {
     
     public List<ProductWrapper> ProductWrapList {get; set;}
     public List<PricebookEntry> prods =  (List<PricebookEntry>) Con.getRecords();
+    public Boolean empty = false;
     
     // Initialize setCon and return a list of records
     public List<PricebookEntry> getProducts() {
@@ -21,7 +22,7 @@ public class ProductController {
 
     public Boolean hasNext {
         get {
-            return con.getHasNext();
+            return Con.getHasNext();
         }
         set;
     }
@@ -29,7 +30,7 @@ public class ProductController {
     // indicates whether there are more records before the current page set.
     public Boolean hasPrevious {
         get {
-            return con.getHasPrevious();
+            return Con.getHasPrevious();
         }
         set;
     }
@@ -37,7 +38,7 @@ public class ProductController {
     // returns the page number of the current page set
     public Integer pageNumber {
         get {
-            return con.getPageNumber();
+            return Con.getPageNumber();
         }
         set;
     }
@@ -53,12 +54,25 @@ public class ProductController {
          con.next();
      }
 
-    @RemoteAction
-    public static List<PricebookEntry> refresh(String searchPhrase) {        
-        String keyword = '%' + searchPhrase + '%';
-        List<PricebookEntry> results = [SELECT Id, Name, UnitPrice FROM PricebookEntry Where IsActive = true AND Name LIKE :keyword];
-        return results;
+     public Boolean getisEmpty(){
+        empty = prods.isEmpty();
+        return empty;
+     }
+
+    
+    public PageReference runSearch() {   
+        String searchPhrase = '%' + String.escapeSingleQuotes(Apexpages.currentPage().getParameters().get('searchbar')) + '%' ;    
+       // String query = 'SELECT Id, Name, UnitPrice FROM PricebookEntry Where IsActive = true AND Name LIKE \'%' 
+       //                 + String.escapeSingleQuotes(searchPhrase) 
+       //                 +'%\'';
+
+        Con = new ApexPages.StandardSetController(Database.getQueryLocator(
+                    [SELECT Id, Name, UnitPrice FROM PricebookEntry Where IsActive = true AND Pricebook2.Name = 'nShop' AND Name LIKE  :searchPhrase ]));
+                Con.setPageSize(5);
+        prods = (List<PricebookEntry>) Con.getRecords();
+        return null;
     }
+
     
         
 }

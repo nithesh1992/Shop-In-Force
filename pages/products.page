@@ -11,24 +11,15 @@
             <apex:slds />
             <script type="text/javascript">
 
-                Visualforce.remoting.timeout = 120000; // Set timeout at page level
-
-                function getSearchResults() {
-                    var searchkeyword = document.getElementById('searchbar').value;
-
-                    // This remoting call will use the page's timeout value
-                    Visualforce.remoting.Manager.invokeAction(
-                        '{!$RemoteAction.ProductController.refresh}',
-                        accountName, 
-                        handleResult
-                        );
+               function doSearch() {
+                    searchServer(document.getElementById("searchbar").value);
                 }
 
-                function handleResult(result, event) { ... }
             </script>
         </head>
         <body>
             <div class="slds-scope"> 
+               <apex:form >
                 <header class="slds-global-header_container"><a href="javascript:void(0);" class="slds-assistive-text slds-assistive-text--focus">Skip to Navigation</a><a href="javascript:void(0);" class="slds-assistive-text slds-assistive-text--focus">Skip to Main Content</a>
                     <div class="slds-global-header slds-grid slds-grid--align-spread">
                         <div class="slds-global-header__item">
@@ -43,7 +34,10 @@
                                     <svg class="slds-input__icon" aria-hidden="true">
                                         <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#search')}"></use>
                                     </svg>
-                                    <input type="search" id="searchbar" class="slds-input slds-lookup__search-input" placeholder="Search Products" />
+                                    <apex:actionFunction name="searchServer" action="{!runSearch}" rerender="tabledata">
+                                          <apex:param name="searchbar" value="" />
+                                    </apex:actionFunction>
+                                    <input type="search" id="searchbar" class="slds-input slds-lookup__search-input" placeholder="Search Products" onkeyup="doSearch();" />
                                  
                                 </div>
                             </div>
@@ -62,7 +56,7 @@
                                         <svg aria-hidden="true" class="slds-icon">
                                             <use xlink:href="{!URLFOR($Asset.SLDS, 
                                                              'assets/icons/custom-sprite/svg/symbols.svg#custom93')}">                                                                
-                                                             </use>                                        
+                                            </use>                                        
                                         </svg>                                        
                                     </span>
                                 </button>                                
@@ -85,15 +79,18 @@
                     </apex:repeat>
                     
                 </div>
+
+                   
                 <div class="slds-align--absolute-center slds-m-top--xx-small slds-m-bottom--medium">
                     <div class="slds-button-group " role="group">
-                    <apex:form>
+                    
                       <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!previous}" value="Previous" id="previous" rendered="{!hasPrevious}"/>
                       <apex:commandButton styleClass="slds-button slds-button--neutral" action="{!next}" value="Next" id="Next" rendered="{!hasNext}" />
-                    </apex:form>
+                    
                     </div>
                 </div>
-                
+             
+               </apex:form> 
             </div>  
         </body>
     </html>

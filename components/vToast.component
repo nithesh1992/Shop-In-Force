@@ -1,0 +1,38 @@
+<apex:component >
+    <apex:attribute name="showToast" description="This renders the toast" type="Boolean" required="true"/>
+    <apex:attribute name="message" description="This is the text to be displayed" type="String" required="true"/>
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <title></title>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            
+            <!-- Import the Design System style sheet -->
+            <apex:slds />
+            
+        </head>
+        <body>
+            <div class="slds-scope">
+                <apex:pageBlock rendered="{!showToast}">
+                    <div class="slds-notify_container">
+                        <div class="slds-notify slds-notify--toast" role="alert">
+                            <span class="slds-assistive-text">Info</span>
+                            <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close">
+                                <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+                                    <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/utility-sprite/svg/symbols.svg#close')}">
+                                    </use>
+                                </svg>                      
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                            <div class="slds-notify__content">
+                                <h2 class="slds-text-heading--small">{!message}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </apex:pageBlock>                
+            </div>
+        </body>
+    </html>
+</apex:component>
